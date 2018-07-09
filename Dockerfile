@@ -16,8 +16,9 @@ RUN groupadd -g ${GROUP_ID} bitcoin \
     && useradd -u ${USER_ID} -g bitcoin -s /bin/bash -m -d /bitcoin bitcoin
 
 # install general dependencies
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
+RUN apt-get update
+
+RUN apt-get install -y --no-install-recommends \
     gnupg \
     ca-certificates \
     wget \
@@ -25,11 +26,10 @@ RUN apt-get update \
 
 # add bitcoin official apt repository
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C70EF1F0305A1ADB9986DBD8D46F45428842CE5E \
-    && echo "deb http://ppa.launchpad.net/bitcoin/bitcoin/ubuntu bionic main" > /etc/apt/sources.list.d/bitcoin.list
+    && echo "deb http://ppa.launchpad.net/bitcoin/bitcoin/ubuntu bionic main" > /etc/apt/sources.list.d/bitcoin.list \
+    && apt-get update
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends bitcoind \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get install -y --no-install-recommends bitcoind
 
 # clean up unneeded cache, install apt packages etc
 RUN apt-get purge -y gnupg ca-certificates wget \
